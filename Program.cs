@@ -52,6 +52,7 @@ try
         string selectedBlog = Console.ReadLine();
 
         Post post = new Post();
+
         post.BlogId = db.Blogs.Where(b => b.Name.Equals(selectedBlog)).Select(b => b.BlogId).First();
 
         Console.WriteLine("Enter title for post");
@@ -96,6 +97,21 @@ try
 
 
 
+    }
+
+    if (input == "4") 
+    {
+        Console.WriteLine("Enter name of blog to read posts from :");
+        string selectedBlog = Console.ReadLine();
+
+        int blogID = db.Blogs.Where(b => b.Name.Equals(selectedBlog)).Select(b => b.BlogId).First();
+
+        var posts = db.Posts.Where(p => p.BlogId.Equals(blogID));
+
+        foreach (var p in posts)
+        {
+            Console.WriteLine($"Blog: {selectedBlog}\nPost Title: {p.Title}\nPost Content: {p.Content}");
+        }
     }
 
 }
