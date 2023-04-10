@@ -6,16 +6,25 @@ string path = Directory.GetCurrentDirectory() + "\\nlog.config";
 
 // create instance of Logger
 var logger = LogManager.LoadConfiguration(path).GetCurrentClassLogger();
+
+var db = new BloggingContext();
+
+string input;
+
 logger.Info("Program started");
 
+
+do 
+{
 Console.WriteLine("1. Display all blogs");
 Console.WriteLine("2. Add blog");
 Console.WriteLine("3. Create post");
 Console.WriteLine("4. Display posts");
+Console.WriteLine("Press enter to exit");
 
-string input = Console.ReadLine();
+input = Console.ReadLine();
 
-var db = new BloggingContext();
+
 
 try
 {
@@ -101,7 +110,15 @@ try
 
     if (input == "4") 
     {
-        Console.WriteLine("Enter name of blog to read posts from :");
+        var query = db.Blogs.OrderBy(b => b.Name);
+
+        Console.WriteLine("All blogs in the database:");
+        foreach (var item in query)
+        {
+            Console.WriteLine(item.Name);
+        }
+
+        Console.WriteLine("Enter name of blog to read posts from:");
         string selectedBlog = Console.ReadLine();
 
         int blogID = db.Blogs.Where(b => b.Name.Equals(selectedBlog)).Select(b => b.BlogId).First();
@@ -119,5 +136,7 @@ catch (Exception ex)
 {
     logger.Error(ex.Message);
 }
+
+} while(input == "1" || input == "2" || input == "3" || input == "4");
 
 logger.Info("Program ended");
